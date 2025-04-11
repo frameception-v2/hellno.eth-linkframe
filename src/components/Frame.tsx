@@ -2,8 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { useFrameSDK } from "~/hooks/useFrameSDK";
+import { SOCIAL_LINKS } from "~/lib/constants";
 
-function LinkCard({ url, title }: { url: string; title: string }) {
+function LinkCard({ url, title, icon }: { url: string; title: string; icon?: string }) {
   return (
     <a 
       href={url}
@@ -15,7 +16,10 @@ function LinkCard({ url, title }: { url: string; title: string }) {
         border: "3px solid #000"
       }}
     >
-      <h3 className="text-xl font-bold text-white mb-2">{title}</h3>
+      <h3 className="text-xl font-bold text-white mb-2">
+        {icon && <span className="mr-2">{icon}</span>}
+        {title}
+      </h3>
       <p className="text-sm text-white/80 truncate">{url}</p>
     </a>
   );
@@ -23,17 +27,17 @@ function LinkCard({ url, title }: { url: string; title: string }) {
 
 export default function Frame() {
   const { isSDKLoaded, sdk } = useFrameSDK();
-  const [links, setLinks] = useState<{url: string; title: string}[]>([]);
+  const [recentLinks, setRecentLinks] = useState<{url: string; title: string}[]>([]);
 
   useEffect(() => {
     if (sdk) {
       // Replace this with actual SDK call to get recent cast links
-      const dummyLinks = [
-        { url: "https://example.com/1", title: "Groovy Link #1" },
-        { url: "https://example.com/2", title: "Far Out Content" },
-        { url: "https://example.com/3", title: "Disco Tech News" },
+      // Replace this with actual SDK call to get recent cast links
+      const dummyRecentLinks = [
+        { url: "https://example.com/1", title: "My Latest Blog Post" },
+        { url: "https://example.com/2", title: "Cool Project" },
       ];
-      setLinks(dummyLinks);
+      setRecentLinks(dummyRecentLinks);
     }
   }, [sdk]);
 
@@ -60,12 +64,28 @@ export default function Frame() {
             textShadow: "3px 3px 0px rgba(0,0,0,0.3)",
           }}
         >
-          Your Funky Links
+          Groovy Social Links
         </h1>
-        <div className="space-y-4">
-          {links.map((link, index) => (
-            <LinkCard key={index} url={link.url} title={link.title} />
-          ))}
+        <div className="space-y-8">
+          {/* Social Links Section */}
+          <div className="space-y-4">
+            <h2 className="text-2xl font-bold text-white mb-4 text-center" style={{ textShadow: "2px 2px 0px rgba(0,0,0,0.3)" }}>
+              Connect with Me
+            </h2>
+            {SOCIAL_LINKS.map((link, index) => (
+              <LinkCard key={`social-${index}`} url={link.url} title={link.title} icon={link.icon} />
+            ))}
+          </div>
+
+          {/* Recent Links Section */}
+          <div className="space-y-4">
+            <h2 className="text-2xl font-bold text-white mb-4 text-center" style={{ textShadow: "2px 2px 0px rgba(0,0,0,0.3)" }}>
+              Recent Shares
+            </h2>
+            {recentLinks.map((link, index) => (
+              <LinkCard key={`recent-${index}`} url={link.url} title={link.title} />
+            ))}
+          </div>
         </div>
       </div>
     </div>
